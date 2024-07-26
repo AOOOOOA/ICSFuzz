@@ -1,15 +1,7 @@
 #!/bin/bash
 
-#!/bin/bash
 
-#TODO: tips： the followleading vehicle ori is the origial all scope one, in order to test the inconsistency, we modify it
-
-# scenario_name="FollowLeadingVehicle"
-# scenario_name="IntersectionCollisionAvoidance"
-
-# run in the correct direction, but since I accidently kill it, I need to re-run it from the middle
 scenario_name="LaneChangeSimple" 
-#scenario_config="FollowLeadingVehicle1_dist5_speed2_10"
 scenario_config="LaneChangeSimple"
 temp_folder="all_temp_data/temp_data1"
 result_txt="result_txt/FollowLeadingVehicle/dist5/result_FollowLeadingVehicle1_dist5_speed2_10.txt"
@@ -28,9 +20,7 @@ launch_carla(){
 
 launch_sr_init(){
         sleep 20
-        #TODO: change the temp_data folder path 
         python scenario_runner.py --openscenario srunner/examples/$scenario_name.xosc --record $temp_folder --port=$port --trafficManagerPort=$tm_port
-        # pkill -9 python
     }
     
 launch_ego_vehicle_init(){
@@ -41,9 +31,7 @@ launch_ego_vehicle_init(){
 
 launch_sr(){
         sleep 10
-        #TODO: change the temp_data folder path 
         python scenario_runner.py --openscenario srunner/examples/$scenario_name.xosc --record $temp_folder --port=$port --trafficManagerPort=$tm_port
-        # pkill -9 python
     }
     
 launch_ego_vehicle(){
@@ -73,31 +61,23 @@ do
         do
             for d_y in $(seq $new_direction_y_scope)
             do
-            #先启动carla  # 再启动scenario runner #最后启动自己的程序并且将参数传进去
-            # echo "Running iteration i=$i, j=$j"
             if [ $(($count % 10)) -eq 0 ]  
             then
-                # pkill -9 CarlaUE4
-                # pkill -9 scenario_runner.py
-                # pkill -9 ego_vehicle.py
 
                 kill -9 $(lsof -i:$port -t) 2> /dev/null
                 kill -9 $(lsof -i:$tm_port -t) 2> /dev/null
+                echo "-------------------------------------------------------------"
                 launch_carla & launch_sr_init & launch_ego_vehicle_init $scenario_name $init_speed $init_direction_x $init_direction_y $distance $speed $d_x $d_y $count $temp_folder $result_txt $port
                 count=$((count+1))
-                echo "distance: $distance, speed: $speed, d_x: $d_x, d_y: $d_y"  
-                echo " iterationRunning number: $count"
             else
                 # pkill -9 scenario_runner.py
                 # pkill -9 ego_vehicle.py
+                echo "-------------------------------------------------------------"
                 launch_sr & launch_ego_vehicle $scenario_name $init_speed $init_direction_x $init_direction_y $distance $speed $d_x $d_y $count $temp_folder $result_txt $port
                 count=$((count+1))
-                echo "distance: $distance, speed: $speed, d_x: $d_x, d_y: $d_y"  
-                echo " iterationRunning number: $count"
             fi
             done
         done
     done
 done
-
 

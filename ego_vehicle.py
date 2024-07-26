@@ -1,9 +1,3 @@
-
-
-
-
-#This file is used to find the ego vehicle abd try to control it in autopilot or in assign control mode
-
 from __future__ import print_function
 
 import argparse
@@ -28,48 +22,12 @@ from multiprocessing import Process, Manager
 import subprocess
 
 from pytorch3d.ops import box3d_overlap
-# ==============================================================================
-# -- Find CARLA module ---------------------------------------------------------
-# ==============================================================================
-# try:
-#     sys.path.append(glob.glob('../carla/dist/carla-*%d.%d-%s.egg' % (
-#         sys.version_info.major,
-#         sys.version_info.minor,
-#         'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
-# except IndexError:
-#     pass
-
-
-# try:
-#     sys.path.append(glob.glob('/home/w/workspace/carla_0.9.13/carla_github_0.9.13/carla/PythonAPI/carla/dist/carla-*%d.%d-%s.egg' % (
-#         sys.version_info.major,
-#         sys.version_info.minor,
-#         'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
-#     print("0000000000000000000000000000000000checkcheck: ",glob.glob('/home/w/workspace/carla_0.9.13/carla_github_0.9.13/carla/PythonAPI/carla/dist/carla-*%d.%d-%s.egg' % (sys.version_info.major,sys.version_info.minor,'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
-
-# except IndexError:
-#     pass
-
-
-# # ==============================================================================
-# # -- Add PythonAPI for release mode --------------------------------------------
-# # ==============================================================================
-# try:
-#     sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/carla')
-# except IndexError:
-#     pass
-
 import carla
 from carla import ColorConverter as cc
 
-from agents.navigation.behavior_agent import BehaviorAgent  # pylint: disable=import-error
-from agents.navigation.basic_agent import BasicAgent  # pylint: disable=import-error
-# import pygame
+from agents.navigation.behavior_agent import BehaviorAgent  
+from agents.navigation.basic_agent import BasicAgent  
 
-#TODO:查看一下behaviorAgent 和 BasicAgent的各自功能
-#1。 先搜索 ego vehicle 2. 设置ego vehicle 为basic agent 3. 设置ego vehicle 为behavior agent 4. 设置arg parser 的参数
-
-#Parameters:
 
 ego_vehicle_collision_indicator=False
 
@@ -93,6 +51,9 @@ def get_carla_transform(loc_rot_tuples):
     return t
 
 
+def dst_folder_confirm(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
 
 def precise_detector(ego_vehicle,npc):
     incon_collision_vehicle=False
@@ -108,7 +69,6 @@ def precise_detector(ego_vehicle,npc):
     bb_coor=[]
     bb = npc.bounding_box
     bb_world_coor=bb.get_world_vertices(npc.get_transform())                
-    # dist = npc.get_transform().location.distance(ego_vehicle.get_transform().location)
     for item in bb_world_coor:
         bb_coor.append([item.x, item.y, item.z])        
     bb_coor=np.array(bb_coor)
@@ -126,76 +86,28 @@ def precise_detector(ego_vehicle,npc):
     return incon_collision_vehicle        
 
 
-def _on_front_camera_capture(image):
-    image.save_to_disk(f"/tmp/fuzzerdata/bev-{image.frame}.jpg")
-    # image.save_to_disk(f"/tmp/fuzzerdata/bev-{image.frame}.svg")
 def _on_collision(event,args,config,ego_vehicle_collision):
     global ego_vehicle_collision_indicator
     if event.other_actor.type_id != "static.road":
-        #if len(event.other_actor.attributes) != 0 and event.other_actor.attributes["role_name"] == "a":
         if len(event.other_actor.attributes) != 0 and (event.other_actor.type_id == "vehicle" or event.other_actor.type_id=="pedestrian"):
             ego_vehicle_collision_indicator=True
-            # print("COLLISION:", event)
-            # print("Collision Happen!")
             
             ego_vehicle_collision={
                 "collision:":True,
                 "collision with:": event.other_actor.type_id,
                 "collision with 2:":event.other_actor.id}
-            # print("++++++++++++++++++++++++++++++ego_vehicle_collision++++++++++++++")
-            # print("ego_vehicle_collision:",ego_vehicle_collision)
-        # print("-----------------enter ego vehicle collision part, the other actor is:",event.other_actor.type_id, "event.other_actor.attributes:",event.other_actor.attributes)
         with open(os.path.join(args.temp_folder,"ego_vehicle_collision.json"),'w', encoding='utf-8') as fp:
             json.dump(ego_vehicle_collision, fp, sort_keys=False, indent=4)
 
 def _on_collision_other(event,args,config,other_vehicle_collision):
     if event.other_actor.type_id != "static.road":
         if len(event.other_actor.attributes) != 0:
-            # print("COLLISION:", event)
-            
-            # print("Collision Happen!")
-            
             other_vehicle_collision={
                 "collision:":True,
                 "collision with:": event.other_actor.type_id,
                 "collision with 2:":event.other_actor.id}
-            # print("other vehicle collision!!!???")
-            # print("other vehicle collision:",other_vehicle_collision)
         with open(os.path.join(args.temp_folder,"other_vehicle_collision.json"),'w', encoding='utf-8') as fp:
             json.dump(other_vehicle_collision, fp, sort_keys=False, indent=4)
-
-
-
-
-
-def dst_folder_confirm(path):
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-"""
-destination = random.choice(spawn_points).location
-agent.set_destination(destination)
-"""
-
-def mutator_to_collision():
-    pass
-    #FIXME: 但是这里怎么界定是提高碰撞概率和减少碰撞概率就会有点麻烦
-
-def mutator_leave_collision():
-    pass
-
-def mutator(scenario_name):
-    #init speed
-    #init direction
-    #change speed
-    #change direction
-    #change distance
-    #different vehicle type cyclist, truck, vehicle 
-    #weather -- 但是weather 在什么时候更改呢
-    
-    #所以是，不同的天气， 不同的 车辆类型（两个循环） 然后选定不同的速度和方向进行运行
-    pass
-
 
 
 
@@ -207,8 +119,6 @@ def save_scenario(config,args, scenario_time,all_fail_dir=None, ego_fail_dir=Non
         ego_fail (_type_, optional): collision, only ego vehicle detected. Defaults to None.
         other_fail (_type_, optional): collision, only other vehicle detected. Defaults to None.
     """    
-    #TODO: save the corresponding config file 
-    #create the folder under the all fail dst folder and copy all the files inside it 
     if all_fail:
         dst_folder=os.path.join(all_fail_dir, scenario_time)
     if ego_fail:
@@ -225,16 +135,12 @@ def save_scenario(config,args, scenario_time,all_fail_dir=None, ego_fail_dir=Non
             dst_op_path=os.path.join(dst_folder,op_file)
             shutil.move(src_op_path, dst_op_path)
             
-    
-
     return
 
 
 
-
-
-def collision_confirm(args,config,scenario_name, scenario_time,all_fail_dir, ego_fail_dir, other_fail_dir,inconsistency_dir,precise_collision):
-    with open(os.path.join(args.temp_folder,scenario_name+".json")) as f: #TODO: change the json file name as the corresponding one
+def collision_confirm(args,config,scenario_name, scenario_time,inconsistency_dir,precise_collision):
+    with open(os.path.join(args.temp_folder,scenario_name+".json")) as f: 
         data = json.load(f)
         ego_vehicle_collision = data["CollisionTest"]
         other_vehicle_collision= data["NpcTest"]
@@ -271,7 +177,6 @@ def ego_vehicle(args,config):
 
             
             blueprint_library = world.get_blueprint_library()
-            #Choose a vehicle blueprint which name is model3 and select the first one
             bp = blueprint_library.filter("model3")[0]
 
             
@@ -281,7 +186,6 @@ def ego_vehicle(args,config):
             first_sim_time = snapshot0.timestamp.elapsed_seconds
 
             
-            #Returns a list of recommended spawning points and random choice one from it
             spawn_point = random.choice(world.get_map().get_spawn_points())
             
             print("waiting for ego vehicle ....")
@@ -307,57 +211,20 @@ def ego_vehicle(args,config):
                 if config.manual:
                     agent=player
                     agent.apply_control(carla.VehicleControl(throttle=1.0, steer=0.0))
-                #control the vehicle
-                # vehicle.set_autopilot(enabled=True)
                 else:
                     if config.agent=="Basic": 
-                        agent=BasicAgent(player) #FIXME: 这里需要给ego vehicle set destination 吗 还是openscenario 中就包括了直接使用就可以了呢
-
+                        agent=BasicAgent(player) 
                     elif config.agent=="Behavior": 
                         agent=BehaviorAgent(player, behavior=config.behavior)
                     
                     elif config.agent=="Maneuver":
-                        #transform 包括 location and rotation(As attributes)
                         player=player
                         
                 spectator=world.get_spectator()
-
                 actor_list.append(player)
-                # actor_list.append(spectator)
                 
                 
-
-                # rgb_camera_bp = blueprint_library.find("sensor.camera.rgb")
-
-                # rgb_camera_bp.set_attribute("image_size_x", "4800")
-                # rgb_camera_bp.set_attribute("image_size_y", "3600")
-                # rgb_camera_bp.set_attribute("fov", "105")
-
-                # # position relative to the parent actor (player)
-                # # camera_tf = carla.Transform(carla.Location(z=1.8))
-                # camera_tf =carla.Transform(carla.Location(z=5),carla.Rotation(pitch=-38))
-
-                # # time in seconds between sensor captures - should sync w/ fps?
-                # # rgb_camera_bp.set_attribute("sensor_tick", "1.0")
-
-                # camera_front = world.spawn_actor(
-                #         rgb_camera_bp,
-                #         camera_tf,
-                #         attach_to=player,
-                #         attachment_type=carla.AttachmentType.Rigid
-                # )
-
-                # camera_front.listen(lambda image: _on_front_camera_capture(image))
-
-                # actor_list.append(camera_front)
-                    
-                    
-                    
-                    
-                    
-
                 collision_bp = blueprint_library.find('sensor.other.collision')
-                # print("----",type(world.get_actor(vehicle_id)))
                 sensor_collision = world.spawn_actor(collision_bp, carla.Transform(),attach_to=player)
                                                     
                 sensor_collision.listen(lambda event: _on_collision(event,args,config,ego_vehicle_collision))
@@ -365,15 +232,11 @@ def ego_vehicle(args,config):
 
 
                 collision_bp1 = blueprint_library.find('sensor.other.collision')
-                # print("----",type(world.get_actor(vehicle_id)))
                 sensor_collision1 = world.spawn_actor(collision_bp1, carla.Transform(),attach_to=other_actor)
-                                                    
                 sensor_collision1.listen(lambda event: _on_collision_other(event,args,config,other_vehicle_collision))
                 actor_list.append(sensor_collision1)
                 
                 
-                
-                #actor_list.append(spectator)
                 
                         
                 while True:
@@ -399,10 +262,7 @@ def ego_vehicle(args,config):
                                             (ego_location.z - other_location.z)**2)
                         
                         transform=player.get_transform()
-                        #forward_vec = transform.rotation.get_forward_vector()
-
                         init_direction= carla.Vector3D(x=args.init_direction_x ,y=args.init_direction_y ,z=0)  #set the init direction, init speed, new_speed, new_direction as mutated parameters
-                        # new_direction=carla.Vector3D(x=config.new_direction_x,y=config.new_direction_y,z=0.0)
                         new_direction=carla.Vector3D(x=args.d_x,y=args.d_y,z=0.0)
                         
                         
@@ -438,34 +298,7 @@ def ego_vehicle(args,config):
                 print("Cannot find the ego vehicle")
                 
         finally:
-            # vid_filename = "/tmp/fuzzerdata/bev.mp4"
-            # if os.path.exists(vid_filename):
-            #     os.remove(vid_filename)
-
-            # cmd_cat = "cat /tmp/fuzzerdata/bev-*.jpg"
-            # cmd_ffmpeg = " ".join([
-            #     "ffmpeg",
-            #     "-f image2pipe",
-            #     f"-r {30}",
-            #     "-vcodec mjpeg",
-            #     "-i -",
-            #     "-vcodec libx264",
-            #     vid_filename
-            # ])
-            # DEVNULL = "2> /dev/null"
-            # cmd = f"{cmd_cat} | {cmd_ffmpeg} {DEVNULL}"
-            # os.system(cmd)
-            # print("(done)")
-
-            # cmd = "rm -f /tmp/fuzzerdata/bev-*.jpg"
-            # os.system(cmd)
-
-
-            # return "error"
             pass
-            # for actor in actor_list:
-                # actor.destroy()
-            # print("All cleaned up!")
     except KeyboardInterrupt:
         print('\nCancelled by user. Bye!')
 
@@ -475,7 +308,6 @@ def main():
     main function
     """
  
-    #types of args 1. basic agent or behavior agent 2. 
     argparser = argparse.ArgumentParser(
         description='CARLA Ego Vehicle Controller')
     
@@ -499,9 +331,7 @@ def main():
         choices=["cautious", "normal", "aggressive"],
         help='Choose one of the possible agent behaviors (default: normal) ',
         default='normal')
-     
-     
-     
+
     argparser.add_argument(
         'scenario_name', type= str,
         help='scenario name in scenario runner',
@@ -564,9 +394,6 @@ def main():
         default='2000',
         help='TCP port to listen to (default: 2000)')
     
-    # scenarios_list = ["FollowLeadingVehicle","IntersectionCollisionAvoidance","CyclistCrossing",
-    #                   "LaneChangeSimple","PedestrianCrossingFront"] 
-        
     args=argparser.parse_args()
     config=config_ori.Config()
 
@@ -590,9 +417,7 @@ def main():
     
     
     actor_list, state, precise_collision_indicator=ego_vehicle(args,config)
-    # print("************************* precise collision indicator:",precise_collision_indicator)
     if state=="end":
-        #kill the actor_list
         for actor in actor_list:
             try:
                 actor.destroy()
@@ -611,7 +436,7 @@ def main():
         "init_direction_y":args.init_direction_y,
         "new_direction_x":args.d_x,
         "new_direction_y":args.d_y,
-        "weather":config.weather #TODO: later this should be moved into the json config gile
+        "weather":config.weather 
             }
     with open(os.path.join(args.temp_folder,"config.json"), "w") as f:
         json.dump(config_save,f, indent=4)
@@ -620,7 +445,6 @@ def main():
     
     collision_result=collision_confirm(args,config, scenario_name, scenario_time, all_fail_dir,ego_fail_dir, other_fail_dir,inconsistency_dir, precise_collision_indicator)
     print("Collision Result:",collision_result)
-    # os.system('pkill -9 CarlaUE4')
     
     
     
@@ -629,39 +453,7 @@ def main():
         f.write('\n')
         f.write('\n')
     
-    # shutil.move('/tmp/fuzzerdata/bev.mp4',config.temp_out_dir)
-    
-
-                    
-    #TODO: 注意视频cp时间有点问题
-    #TODO: 在这里需要统计一下不同场景下更改不同的参数引发事故的比例-- 已记录，但是由于carla kill 不干净的问题，还没有存储下来
-    
-
-    #TODO: 需要有个接口可以更改xsoc 中的不同车型 暂时不改
-
-    #对于basic 和 behavior 的agent来说， 还需要设置driving behavior
-    #暂时还不用max cycle 因为还是停留在遍历里
-    #TODO: 写一个是否要存储video 的接口出来
 
 if __name__ == '__main__':
     main()
-
-
-
-    
-
-#TODO:
-#1. 控制可以多次运行， 在每次运行结束之后，load 进json 文件判断是不是有collision inconsistency 的情况。
-#2. 如果有的话，就把这次的log文件存放在单独的文件夹中， 用于后续的数据分析（这步需要注意log能不能用来复现场景和数据分析。 先把框架搭完，运行之前验证这个）
-#3. 如果没有的话，调用最后的分析函数（或者不用，直接用遍历的方法），生成下一轮的本车运行控制指令（这里需要区别是只遍历本车的指令还是他车的指令也要遍历）
-#4. 重复1-3， 但是这里是要决定一下停止条件，比如是两车都有检测出碰撞或者是两车都没有检测出碰撞，要怎么处理这个情况，什么情况下换个方向继续遍历mutation 
-#5. 还是说在某些情况下停止继续测试转到另一个场景中呢？
-#6。 以及区分一下什么时候用behavior agent 什么时候用 manual control command
-# Tips: 看下drivefuzz; scenariorita; zhiyuanzhong 工作的fuzzing 框架，看有哪些是我们可以直接拿来用的，避免我们自己在这里吭哧吭哧的写
-# 看了一下drivefuzz， 提醒了我可以写一个config 文件用来定义场景(部分) 这样既可以比较好的用来fuzzing，也可以用来回放场景(if log 不行的话)
-
-
-
-# actually this file should be a comprehensive testing file in the end
-# 1.check the metric part and the criteria part  
 
