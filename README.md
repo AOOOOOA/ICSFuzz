@@ -1,12 +1,12 @@
 ##System Requirements:
 OS: ubuntu 18.04
 
-##Clone ICSFuzz
+## Clone ICSFuzz
 ```
 git clone https://github.com/AOOOOOA/ICSFuzz.git
 ```
 
-##Install Carla 0.9.13 
+## Install Carla 0.9.13 
 1. Download Carla
 
 Go to https://github.com/carla-simulator/carla/releases/tag/0.9.13 and download **CARLA_0.9.13.tar.gz**.
