@@ -1,0 +1,20 @@
+{
+    "scenario_name": "IntersectionCollisionAvoidance",
+    "init_speed": 10.0,
+    "new_speed": 31.0,
+    "change_distance": 8.0,
+    "init_direction_x": -1.0,
+    "init_direction_y": 0.0,
+    "new_direction_x": -1.0,
+    "new_direction_y": 0.68,
+    "weather": {
+        "cloud": 0,
+        "rain": 0,
+        "puddle": 0,
+        "wind": 0,
+        "fog": 0,
+        "wetness": 0,
+        "angle": 0,
+        "altitude": 0
+    }
+}

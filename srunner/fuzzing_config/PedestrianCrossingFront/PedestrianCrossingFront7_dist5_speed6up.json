@@ -1,0 +1,21 @@
+{
+    "PedestrianCrossingFront":{
+        "agent":"Maneuver",
+        "behavior":"Normal",
+        "maneuver_parameter":{
+            "init_speed":20,
+            "init_direction_x":-1,
+            "init_direction_y":0
+        },
+        "testing_scope":{
+            "change_distance":[5,-1,0],
+            "new_speed":[6,2,12],
+            "new_direction_x":[-1,0.03,0],
+            "new_direction_y":[-1,0.05,0]
+        },
+        "sync":true,
+        "manual":false
+        }
+    }
+    
+    

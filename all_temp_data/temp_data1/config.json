@@ -1,0 +1,20 @@
+{
+    "scenario_name": "FollowLeadingVehicle",
+    "init_speed": 20.0,
+    "new_speed": 5.0,
+    "change_distance": 5.0,
+    "init_direction_x": 1.0,
+    "init_direction_y": 0.0,
+    "new_direction_x": 1.0,
+    "new_direction_y": -0.63,
+    "weather": {
+        "cloud": 0,
+        "rain": 0,
+        "puddle": 0,
+        "wind": 0,
+        "fog": 0,
+        "wetness": 0,
+        "angle": 0,
+        "altitude": 0
+    }
+}

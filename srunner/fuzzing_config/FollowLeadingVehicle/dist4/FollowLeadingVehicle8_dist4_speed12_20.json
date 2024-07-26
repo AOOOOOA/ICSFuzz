@@ -1,0 +1,20 @@
+
+{
+"FollowLeadingVehicle":{
+    "agent":"Maneuver",
+    "behavior":"Normal",
+    "maneuver_parameter":{
+        "init_speed":20,
+        "init_direction_x":1,
+        "init_direction_y":0
+    },
+    "testing_scope":{
+        "change_distance":[4,-1,3],
+        "new_speed":[12,2,20],
+        "new_direction_x":[1,-0.05,0],
+        "new_direction_y":[-1,0.02,1]
+    },
+    "sync":true,
+    "manual":false
+    }
+}

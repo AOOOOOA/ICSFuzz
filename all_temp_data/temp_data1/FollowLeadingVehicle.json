@@ -1,0 +1,244 @@
+{
+    "RunningRedLightTest": {
+        "children": [],
+        "feedback_message": "",
+        "blackbox_level": 4,
+        "_terminate_on_failure": false,
+        "actor": {
+            "generation": "1",
+            "number_of_wheels": "4",
+            "sticky_control": "true",
+            "object_type": "",
+            "color": "0,0,255",
+            "role_name": "hero"
+        },
+        "test_status": "SUCCESS",
+        "expected_value_success": 0,
+        "expected_value_acceptable": null,
+        "actual_value": 0,
+        "optional": false,
+        "list_traffic_events": [],
+        "_last_red_light_id": null,
+        "debug": false
+    },
+    "OnSidewalkTest": {
+        "children": [],
+        "feedback_message": "",
+        "blackbox_level": 4,
+        "_terminate_on_failure": false,
+        "actor": {
+            "generation": "1",
+            "number_of_wheels": "4",
+            "sticky_control": "true",
+            "object_type": "",
+            "color": "0,0,255",
+            "role_name": "hero"
+        },
+        "test_status": "FAILURE",
+        "expected_value_success": 0,
+        "expected_value_acceptable": null,
+        "actual_value": 1,
+        "optional": false,
+        "_onsidewalk_active": false,
+        "_outside_lane_active": false,
+        "_wrong_sidewalk_distance": 0,
+        "_wrong_outside_lane_distance": 0,
+        "_outside_lane_start_location": null,
+        "_duration": 0,
+        "_prev_time": 93.68889914057218,
+        "_time_outside_lanes": 0.774972426937893
+    },
+    "CollisionTest": {
+        "children": [],
+        "feedback_message": "",
+        "blackbox_level": 4,
+        "_terminate_on_failure": false,
+        "actor": {
+            "generation": "1",
+            "number_of_wheels": "4",
+            "sticky_control": "true",
+            "object_type": "",
+            "color": "0,0,255",
+            "role_name": "hero"
+        },
+        "test_status": "FAILURE",
+        "expected_value_success": 0,
+        "expected_value_acceptable": null,
+        "actual_value": 2,
+        "optional": false,
+        "_collision_sensor": null,
+        "other_actor_type": null,
+        "other_actor": {
+            "generation": "1",
+            "number_of_wheels": "2",
+            "sticky_control": "true",
+            "driver_id": "2",
+            "object_type": "",
+            "color": "255,0,0",
+            "role_name": "adversary"
+        },
+        "last_id": null,
+        "collision_time": 92.9404177214019,
+        "collision_event_dict": [
+            {
+                "type": "vehicle.bh.crossbike",
+                "id": 198,
+                "x": 199.414794921875,
+                "y": 198.87730407714844,
+                "z": 0.03425537049770355
+            },
+            {
+                "type": "static.wall",
+                "id": 0,
+                "x": 342.4891052246094,
+                "y": 195.02232360839844,
+                "z": 0.07564246654510498
+            }
+        ],
+        "collision_with_other_actor": true
+    },
+    "CheckDrivenDistance": {
+        "children": [],
+        "feedback_message": "",
+        "blackbox_level": 4,
+        "_terminate_on_failure": false,
+        "actor": {
+            "generation": "1",
+            "number_of_wheels": "4",
+            "sticky_control": "true",
+            "object_type": "",
+            "color": "0,0,255",
+            "role_name": "hero"
+        },
+        "test_status": "SUCCESS",
+        "expected_value_success": 100.0,
+        "expected_value_acceptable": null,
+        "actual_value": 201.25,
+        "optional": false,
+        "list_traffic_events": []
+    },
+    "RunningStopTest": {
+        "children": [],
+        "feedback_message": "",
+        "blackbox_level": 4,
+        "_terminate_on_failure": false,
+        "actor": {
+            "generation": "1",
+            "number_of_wheels": "4",
+            "sticky_control": "true",
+            "object_type": "",
+            "color": "0,0,255",
+            "role_name": "hero"
+        },
+        "test_status": "SUCCESS",
+        "expected_value_success": 0,
+        "expected_value_acceptable": null,
+        "actual_value": 0,
+        "optional": false,
+        "list_traffic_events": [],
+        "_list_stop_signs": [],
+        "_target_stop_sign": null,
+        "_stop_completed": false,
+        "_affected_by_stop": false
+    },
+    "CheckKeepLane": {
+        "children": [],
+        "feedback_message": "",
+        "blackbox_level": 4,
+        "_terminate_on_failure": false,
+        "actor": {
+            "generation": "1",
+            "number_of_wheels": "4",
+            "sticky_control": "true",
+            "object_type": "",
+            "color": "0,0,255",
+            "role_name": "hero"
+        },
+        "test_status": "FAILURE",
+        "expected_value_success": 0,
+        "expected_value_acceptable": null,
+        "actual_value": 4,
+        "optional": false,
+        "list_traffic_events": [],
+        "_lane_sensor": null
+    },
+    "WrongLaneTest": {
+        "children": [],
+        "feedback_message": "",
+        "blackbox_level": 4,
+        "_terminate_on_failure": false,
+        "actor": {
+            "generation": "1",
+            "number_of_wheels": "4",
+            "sticky_control": "true",
+            "object_type": "",
+            "color": "0,0,255",
+            "role_name": "hero"
+        },
+        "test_status": "FAILURE",
+        "expected_value_success": 0,
+        "expected_value_acceptable": null,
+        "actual_value": 1,
+        "optional": false,
+        "_last_lane_id": 1,
+        "_last_road_id": 219,
+        "_in_lane": true,
+        "_wrong_distance": 0
+    },
+    "NpcTest": {
+        "children": [],
+        "feedback_message": "",
+        "blackbox_level": 4,
+        "_terminate_on_failure": false,
+        "actor": {
+            "generation": "1",
+            "number_of_wheels": "2",
+            "sticky_control": "true",
+            "driver_id": "2",
+            "object_type": "",
+            "color": "255,0,0",
+            "role_name": "adversary"
+        },
+        "test_status": "FAILURE",
+        "expected_value_success": 0,
+        "expected_value_acceptable": null,
+        "actual_value": 3,
+        "optional": false,
+        "other_actor": {
+            "generation": "1",
+            "number_of_wheels": "4",
+            "sticky_control": "true",
+            "object_type": "",
+            "color": "0,0,255",
+            "role_name": "hero"
+        },
+        "other_actor_type": null,
+        "last_id": null,
+        "collision_time": 86.03842250164598,
+        "_collision_sensor": null,
+        "collision_event_dict": [
+            {
+                "type": "vehicle.lincoln.mkz_2017",
+                "id": 197,
+                "x": 202.13162231445312,
+                "y": 198.9964599609375,
+                "z": 0.006315250881016254
+            },
+            {
+                "type": "static.road",
+                "id": 0,
+                "x": 207.0061798095703,
+                "y": 199.55532836914062,
+                "z": 1.0660415887832642
+            },
+            {
+                "type": "static.road",
+                "id": 0,
+                "x": 211.08963012695312,
+                "y": 200.2082061767578,
+                "z": 0.4956832528114319
+            }
+        ],
+        "collision_with_other_actor": true
+    }
+}
